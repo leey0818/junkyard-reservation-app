@@ -17,6 +17,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# mkdir if not exist public folder
+RUN mkdir -p public
+
 # Pass jenkins environment variables
 ARG NEXT_PUBLIC_KAKAO_CLIENT_ID
 ENV NEXT_PUBLIC_KAKAO_CLIENT_ID ${NEXT_PUBLIC_KAKAO_CLIENT_ID}
