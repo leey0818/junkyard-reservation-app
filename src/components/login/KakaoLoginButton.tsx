@@ -1,7 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import imageKakaoLogin from '@assets/images/btn_kakao_login.png';
+import KakaoSymbol from '@assets/images/kakao_symbol.svg';
 
 export default function KakaoLoginButton() {
   const handleClick = () => {
@@ -14,8 +13,12 @@ export default function KakaoLoginButton() {
   };
 
   return (
-    <a className="cursor-pointer" onClick={handleClick}>
-      <Image src={imageKakaoLogin} alt="카카오 로그인" unoptimized={true} />
+    <a
+      className="inline-flex items-center justify-center select-none h-12 px-4 w-96 rounded-md bg-[#FEE500] text-sm text-black/85 gap-2 cursor-pointer"
+      onClick={handleClick}
+    >
+      <KakaoSymbol />
+      카카오 로그인
     </a>
   );
 }
