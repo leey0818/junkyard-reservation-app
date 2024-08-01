@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { Noto_Sans_KR } from 'next/font/google';
-import './globals.css';
 import classNames from 'classnames';
 import pkg from '../../package.json';
+import './globals.css';
 
 const notoSansKR = Noto_Sans_KR({ subsets: ['latin'] });
 
