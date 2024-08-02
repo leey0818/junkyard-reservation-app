@@ -16,14 +16,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
+                sh 'docker build --platform linux/amd64,linux/arm64 -t 3.35.254.168:5000/${DOCKER_IMAGE_NAME}:latest .'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker tag ${DOCKER_IMAGE_NAME}:latest 3.35.254.168:5000/${DOCKER_IMAGE_NAME}'
-                sh 'docker push 3.35.254.168:5000/${DOCKER_IMAGE_NAME}'
+                sh 'docker push 3.35.254.168:5000/${DOCKER_IMAGE_NAME}:latest'
             }
         }
     }
