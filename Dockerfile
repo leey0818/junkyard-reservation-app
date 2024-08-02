@@ -1,4 +1,6 @@
-FROM node:20.16.0-alpine as base
+ARG NODE_VERSION=20.16.0-alpine
+
+FROM --platform=$BUILDPLATFORM node:$NODE_VERSION AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -22,23 +24,23 @@ RUN mkdir -p public
 
 # Pass jenkins environment variables
 ARG NEXT_PUBLIC_KAKAO_CLIENT_ID
-ENV NEXT_PUBLIC_KAKAO_CLIENT_ID ${NEXT_PUBLIC_KAKAO_CLIENT_ID}
+ENV NEXT_PUBLIC_KAKAO_CLIENT_ID=${NEXT_PUBLIC_KAKAO_CLIENT_ID}
 ARG NEXT_PUBLIC_KAKAO_REDIRECT_URI
-ENV NEXT_PUBLIC_KAKAO_REDIRECT_URI ${NEXT_PUBLIC_KAKAO_REDIRECT_URI}
+ENV NEXT_PUBLIC_KAKAO_REDIRECT_URI=${NEXT_PUBLIC_KAKAO_REDIRECT_URI}
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN CI=true yarn run build
 
 
 # Production image, copy all the files and run next
-FROM base AS runner
+FROM node:$NODE_VERSION AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -60,7 +62,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
