@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build --platform linux/amd64,linux/arm64 -t 3.35.254.168:5000/${DOCKER_IMAGE_NAME}:latest .'
+                sh 'docker build --platform linux/amd64 -t 3.35.254.168:5000/${DOCKER_IMAGE_NAME}:latest .'
             }
         }
 
