@@ -8,8 +8,8 @@ pipeline {
     }
 
     environment {
+        DOCKER_REGISTRY = '3.35.254.168:5000'
         DOCKER_IMAGE = 'junkyard-frontend'
-        REGISTRY = '3.35.254.168:5000'
     }
 
     stages {
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Docker Build and Push') {
             steps {
-                sh 'docker buildx build --push --platform=linux/amd64,linux/arm64 -t ${env.REGISTRY}/${env.DOCKER_IMAGE}:latest .'
+                sh "docker buildx build --push --platform=linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest ."
             }
         }
     }
