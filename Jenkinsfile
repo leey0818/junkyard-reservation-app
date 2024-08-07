@@ -23,6 +23,7 @@ pipeline {
             steps {
                 nodejs('NodeJS 20.16.0') {
                     sh "yarn --frozen-lockfile"
+                    sh "mkdir -p public"
                     sh "CI=true yarn build"
                 }
             }
