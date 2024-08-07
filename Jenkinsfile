@@ -19,6 +19,15 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                nodejs('NodeJS 20.16.0') {
+                    sh "yarn --frozen-lockfile"
+                    sh "CI=true yarn build"
+                }
+            }
+        }
+
         stage('Docker Build and Push') {
             steps {
                 sh "docker build --platform=linux/amd64 -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest ."
