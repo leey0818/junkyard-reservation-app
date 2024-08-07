@@ -3,10 +3,10 @@ import Avatar from '@components/Avatar';
 
 export default function Home() {
   return (
-    <main className="px-3 py-4">
+    <main className="px-4 py-5">
       <div className="mb-12">
-        <div className="text-right mb-2"><Avatar /></div>
-        <div className="border rounded">
+        <div className="text-right mb-4"><Avatar /></div>
+        <div className="border rounded shadow-md">
           <p className="flex h-32 items-center justify-center text-gray-400 text-center">
             차량 예약 없음
           </p>
