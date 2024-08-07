@@ -21,7 +21,8 @@ pipeline {
 
         stage('Docker Build and Push') {
             steps {
-                sh "docker buildx build --push --platform=linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest ."
+                sh "docker build --platform=linux/amd64 -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest ."
+                sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
             }
         }
     }
