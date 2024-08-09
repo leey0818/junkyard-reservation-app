@@ -12,6 +12,7 @@ type TokenResponse = {
 /* 카카오 로그인 페이지 이동 */
 async function doLoginKakao() {
   const res = await fetch(process.env.BACKEND_API_URL + '/member/kakao/checkout', {
+    method: 'POST',
     cache: 'no-store',
     signal: AbortSignal.timeout(5000),
   });
