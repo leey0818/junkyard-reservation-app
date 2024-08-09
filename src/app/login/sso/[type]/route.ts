@@ -1,25 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ApiResponse } from '@/types/api';
 
-type TokenResponse = {
-  code: string;
-  message: string;
-  data: {
-    clientId: string;
-    callbackUrl: string;
-  };
-};
+type KakaoResponse = ApiResponse<{
+  clientId: string;    // 카카오 클라이언트 ID
+  callbackUrl: string; // 카카오 로그인 콜백 URL
+}>;
 
 /* 카카오 로그인 페이지 이동 */
 async function doLoginKakao() {
   const res = await fetch(process.env.BACKEND_API_URL + '/member/kakao/checkout', {
     method: 'POST',
-    cache: 'no-store',
     signal: AbortSignal.timeout(5000),
   });
 
   if (!res.ok) return new NextResponse(null, { status: 500 });
 
-  const result: TokenResponse = await res.json();
+  const result: KakaoResponse = await res.json();
 
   // 서버 응답 전상
   if (result.code === 'NORMAL') {
