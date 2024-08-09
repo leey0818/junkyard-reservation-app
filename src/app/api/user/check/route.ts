@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { cookies } from 'next/headers';
+import { getRequestHost } from '@/utils/server';
 
 type AuthCheckResponse = ApiResponse<{
   kakaoId: string;  // 카카오 사용자 ID
@@ -28,13 +29,16 @@ export async function GET(request: NextRequest) {
 
   const result: AuthCheckResponse = await res.json();
   if (result.code === 'NORMAL') {
+    const host = getRequestHost(request);
+    console.log(host);
     console.log(result.data);
+
     if (result.data.joined) {
-      return NextResponse.redirect(new URL('/', request.url));        // 이미 가입된 사용자
+      return NextResponse.redirect(new URL('/', host));        // 이미 가입된 사용자
     } else {
       // 가입에 필요한 카카오 ID 저장
       cookies().set('kid', result.data.kakaoId, { httpOnly: true });
-      return NextResponse.redirect(new URL('/signup', request.url));  // 신규가입
+      return NextResponse.redirect(new URL('/signup', host));  // 신규가입
     }
   } else {
     return new NextResponse(null, { status: 500, statusText: `${result.message} [${result.code}]` });
