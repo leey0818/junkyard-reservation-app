@@ -1,25 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 type TokenResponse = {
-  clientId: string;
-  redirectUri: string;
+  code: string;
+  message: string;
+  data: {
+    clientId: string;
+    callbackUrl: string;
+  };
 };
 
 /* 카카오 로그인 페이지 이동 */
 async function doLoginKakao() {
-  const res = await fetch(process.env.BACKEND_API_URL + '/token/kakao', {
+  const res = await fetch(process.env.BACKEND_API_URL + '/member/kakao/checkout', {
     cache: 'no-store',
     signal: AbortSignal.timeout(5000),
   });
 
-  const data: TokenResponse = await res.json();
-  const searchParams = new URLSearchParams({
-    client_id: data.clientId,
-    redirect_uri: data.redirectUri,
-    response_type: 'code',
-  });
+  if (!res.ok) return new NextResponse(null, { status: 500 });
 
-  return NextResponse.redirect('https://kauth.kakao.com/oauth/authorize?' + searchParams.toString(), { status: 302 });
+  const result: TokenResponse = await res.json();
+
+  // 서버 응답 전상
+  if (result.code === 'NORMAL') {
+    const searchParams = new URLSearchParams({
+      client_id: result.data.clientId,
+      redirect_uri: result.data.callbackUrl,
+      response_type: 'code',
+    });
+
+    return NextResponse.redirect('https://kauth.kakao.com/oauth/authorize?' + searchParams.toString(), { status: 302 });
+  } else {
+    return new NextResponse(null, { status: 500, statusText: `${result.message} [${result.code}]` });
+  }
 }
 
 export async function GET(request: NextRequest, { params }: { params: { type: string } }) {
