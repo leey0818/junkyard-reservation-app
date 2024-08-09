@@ -30,6 +30,8 @@ export async function GET(request: NextRequest) {
   const result: AuthCheckResponse = await res.json();
   if (result.code === 'NORMAL') {
     const host = getRequestHost(request);
+    console.log(request.url);
+    console.log(request.nextUrl);
     console.log(host);
     console.log(result.data);
 
