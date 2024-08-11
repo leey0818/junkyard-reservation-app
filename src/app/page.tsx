@@ -22,7 +22,7 @@ export default function Home() {
 
         <Link
           href="/login"
-          className="inline-block border bg-blue-500 text-white border-blue-600 rounded px-2 py-1"
+          className="inline-block border bg-blue-500 text-white border-blue-600 rounded px-3 py-1"
         >로그인 페이지로 이동</Link>
       </div>
     </main>
