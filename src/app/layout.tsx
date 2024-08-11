@@ -9,7 +9,7 @@ import './globals.css';
 config.autoAddCss = false;
 
 const pretendardFont = localFont({
-  src: '../assets/fonts/PretendardVariable.ttf',
+  src: '../assets/fonts/PretendardVariable.woff2',
   weight: '45 920',
 });
 
