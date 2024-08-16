@@ -30,6 +30,9 @@ export default function SignupForm() {
       if (res.ok) {
         const result = await res.json();
         if (result.success) {
+          // 응답받은 리프레시 토큰을 로컬스토리지에 저장
+          localStorage.setItem('refreshToken', result.refreshToken);
+
           alert('정상적으로 회원가입 되었습니다.');
           router.push('/');
         } else {
@@ -96,7 +99,7 @@ export default function SignupForm() {
           )}
           {...register('email', {
             required: '이메일을 입력하세요.',
-            pattern: {value: /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: '올바른 이메일을 입력하세요.'},
+            pattern: {value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: '올바른 이메일을 입력하세요.'},
             disabled: loading,
           })}
         />

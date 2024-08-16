@@ -4,7 +4,10 @@ import { ApiResponse } from '@/types/api';
 import { decodeJwt } from 'jose';
 
 type JoinResponse = ApiResponse<{
-  token: string;
+  token: {
+    accessToken: string;
+    refreshToken: string;
+  };
 }>
 
 export async function POST(request: NextRequest) {
@@ -34,14 +37,17 @@ export async function POST(request: NextRequest) {
 
   const result: JoinResponse = await res.json();
   if (result.code === 'NORMAL') {
-    // JWT 토큰 쿠키에 저장
-    const { exp } = decodeJwt(result.data.token);
-    cookies().set('token', result.data.token, { expires: exp ? exp * 1000 : undefined });
+    // JWT 엑세스토큰 쿠키에 저장
+    const { exp } = decodeJwt(result.data.token.accessToken);
+    cookies().set('accessToken', result.data.token.accessToken, { expires: exp ? exp * 1000 : undefined });
 
     // 임시 카카오 ID 쿠키 삭제
     cookies().delete('kid');
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      refreshToken: result.data.token.refreshToken,
+    });
   } else {
     return NextResponse.json({ success: false, message: `${result.message} [${result.code}]`});
   }
