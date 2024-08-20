@@ -1,5 +1,6 @@
 import uniqolor from 'uniqolor';
 import classNames from 'classnames';
+import AvatarWrapper from '@components/avatar/AvatarWrapper';
 
 type ColouredAvatarProps = {
   text: string;
@@ -12,12 +13,14 @@ type ColouredAvatarProps = {
 export default function ColouredAvatar({ text }: ColouredAvatarProps) {
   const colour = uniqolor(text);
   return (
-    <div
+    <AvatarWrapper
+      style={{ backgroundColor: colour.color }}
       className={classNames(
-        `inline-flex items-center justify-center rounded-full w-12 h-12 overflow-hidden shadow-md uppercase text-lg`,
+        'border-none uppercase text-lg',
         colour.isLight && 'text-white',
       )}
-      style={{ backgroundColor: colour.color }}
-    >{text.substring(0, 2)}</div>
+    >
+      {text.substring(0, 2)}
+    </AvatarWrapper>
   );
 };
