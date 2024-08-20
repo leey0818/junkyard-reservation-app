@@ -14,10 +14,7 @@ const pretendardFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: pkg.description,
-    template: `%s | ${pkg.description}`,
-  },
+  title: `익차장 - ${pkg.description}`,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
