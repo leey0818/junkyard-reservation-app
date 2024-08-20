@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { cookies } from 'next/headers';
-import { getRequestHost, redirectUri } from '@/utils/server';
+import { getRequestHost, redirectUri, setUserTokenCookie } from '@/utils/server';
 
 type AuthCheckResponse = ApiResponse<{
-  kakaoId: string;  // 카카오 사용자 ID
-  token: string;    // 엑세스 토큰
   joined: boolean;  // 가입여부
+  kakaoId: string;  // 카카오 사용자 ID
   nickname: string; // 닉네임
+  token: {
+    accessToken: string;  // 엑세스 토큰
+    refreshToken: string; // 리프레시토큰
+  };
 }>;
 
 export async function GET(request: NextRequest) {
@@ -36,6 +39,8 @@ export async function GET(request: NextRequest) {
     console.log(result.data);
 
     if (result.data.joined) {
+      // 토큰정보 저장
+      setUserTokenCookie(result.data.token.accessToken, result.data.token.refreshToken);
       return redirectUri(request, '/');  // 이미 가입된 사용자
     } else {
       // 가입에 필요한 카카오 ID 저장

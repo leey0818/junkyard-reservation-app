@@ -30,7 +30,7 @@ const getAccessTokenWithRefreshToken = async () => {
   try {
     const refreshToken = cookies().get('refreshToken');
     if (refreshToken?.value) {
-      const res = await fetch(process.env.BACKEND_API_URL + '/v1/api/member/refresh-token', {
+      const res = await fetch(process.env.BACKEND_API_URL + '/member/refresh-token', {
         headers: {
           refreshToken: refreshToken.value,
         },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { ApiResponse } from '@/types/api';
-import { decodeJwt } from 'jose';
+import { setUserTokenCookie } from '@/utils/server';
 
 type JoinResponse = ApiResponse<{
   token: {
@@ -37,19 +37,11 @@ export async function POST(request: NextRequest) {
 
   const result: JoinResponse = await res.json();
   if (result.code === 'NORMAL') {
-    const accessToken = result.data.token.accessToken;
-    const refreshToken = result.data.token.refreshToken;
-
     // 임시 카카오 ID 쿠키 삭제
     cookies().delete('kid');
 
-    // JWT 엑세스토큰 쿠키에 저장
-    const acsPayload = decodeJwt(accessToken);
-    cookies().set('accessToken', accessToken, { expires: acsPayload.exp ? acsPayload.exp * 1000 : undefined });
-
-    // JWT 리프레시토큰 쿠키에 저장 (httpOnly)
-    const refPayload = decodeJwt(refreshToken);
-    cookies().set('refreshToken', refreshToken, { expires: refPayload.exp ? refPayload.exp * 1000 : undefined, httpOnly: true });
+    // 토큰 쿠키에 저장
+    setUserTokenCookie(result.data.token.accessToken, result.data.token.refreshToken);
 
     return NextResponse.json({ success: true });
   } else {
