@@ -68,6 +68,6 @@ export default async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/api/(?!user).*',  // api 하위 전부 (api/user 제외)
+    '/api/((?!user).*)',  // api 하위 전부 (api/user 제외)
   ],
 };
