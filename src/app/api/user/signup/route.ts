@@ -37,17 +37,21 @@ export async function POST(request: NextRequest) {
 
   const result: JoinResponse = await res.json();
   if (result.code === 'NORMAL') {
-    // JWT 엑세스토큰 쿠키에 저장
-    const { exp } = decodeJwt(result.data.token.accessToken);
-    cookies().set('accessToken', result.data.token.accessToken, { expires: exp ? exp * 1000 : undefined });
+    const accessToken = result.data.token.accessToken;
+    const refreshToken = result.data.token.refreshToken;
 
     // 임시 카카오 ID 쿠키 삭제
     cookies().delete('kid');
 
-    return NextResponse.json({
-      success: true,
-      refreshToken: result.data.token.refreshToken,
-    });
+    // JWT 엑세스토큰 쿠키에 저장
+    const acsPayload = decodeJwt(accessToken);
+    cookies().set('accessToken', accessToken, { expires: acsPayload.exp ? acsPayload.exp * 1000 : undefined });
+
+    // JWT 리프레시토큰 쿠키에 저장 (httpOnly)
+    const refPayload = decodeJwt(refreshToken);
+    cookies().set('refreshToken', refreshToken, { expires: refPayload.exp ? refPayload.exp * 1000 : undefined, httpOnly: true });
+
+    return NextResponse.json({ success: true });
   } else {
     return NextResponse.json({ success: false, message: `${result.message} [${result.code}]`});
   }

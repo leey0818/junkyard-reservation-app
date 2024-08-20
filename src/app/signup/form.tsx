@@ -30,9 +30,6 @@ export default function SignupForm() {
       if (res.ok) {
         const result = await res.json();
         if (result.success) {
-          // 응답받은 리프레시 토큰을 로컬스토리지에 저장
-          localStorage.setItem('refreshToken', result.refreshToken);
-
           alert('정상적으로 회원가입 되었습니다.');
           router.push('/');
         } else {
