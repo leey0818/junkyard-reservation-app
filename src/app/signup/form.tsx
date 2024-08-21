@@ -26,7 +26,9 @@ export default function SignupForm(props: SignupFormProps) {
     formState: { errors },
     setValue,
     handleSubmit
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: { nickname: props.initialName },
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
@@ -52,7 +54,7 @@ export default function SignupForm(props: SignupFormProps) {
   // 보안토큰 셋팅
   useEffect(() => {
     setValue('secToken', props.secToken);
-  }, [props.secToken]);
+  }, [setValue, props.secToken]);
 
   return (
     <form className="mt-16" onSubmit={handleSubmit(onSubmit)}>
@@ -67,7 +69,6 @@ export default function SignupForm(props: SignupFormProps) {
             errors.nickname ? 'border-red-600' : 'border-gray-300',
           )}
           {...register('nickname', {
-            value: props.initialName,
             required: '닉네임을 입력하세요.',
             maxLength: {value: 20, message: '닉네임은 최대 20자리 입력 가능합니다.'},
             disabled: loading,
