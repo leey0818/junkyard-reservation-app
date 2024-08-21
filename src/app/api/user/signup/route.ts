@@ -1,19 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { ApiResponse } from '@/types/api';
+import { ApiResponse, SignupTokenPayload } from '@/types/api';
 import { setUserTokenCookie } from '@/utils/server';
+import { decryptToJson } from '@/utils/crypto';
+
+type RequestBody = {
+  secToken: string;
+  nickname: string;
+  phoneNo: string;
+  email: string;
+};
 
 type JoinResponse = ApiResponse<{
   token: {
     accessToken: string;
     refreshToken: string;
   };
-}>
+}>;
+
 
 export async function POST(request: NextRequest) {
-  const data = await request.json();
-  const kakaoId = cookies().get('kid');
-  if (!kakaoId?.value) {
+  const data: RequestBody = await request.json();
+  const payload = decryptToJson<SignupTokenPayload>(data.secToken);
+  if (!payload) {
     return NextResponse.json({ success: false, message: '입력값 누락' });
   }
 
@@ -23,10 +32,11 @@ export async function POST(request: NextRequest) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      id: kakaoId.value,
+      id: payload.id,
       name: data.nickname,
       phoneNo: data.phoneNo,
       email: data.email,
+      profileUrl: payload.profile,
       method: 'kakao',
     }),
   });
@@ -37,9 +47,6 @@ export async function POST(request: NextRequest) {
 
   const result: JoinResponse = await res.json();
   if (result.code === 'NORMAL') {
-    // 임시 카카오 ID 쿠키 삭제
-    cookies().delete('kid');
-
     // 토큰 쿠키에 저장
     setUserTokenCookie(result.data.token.accessToken, result.data.token.refreshToken);
 

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ApiResponse } from '@/types/api';
-import { cookies } from 'next/headers';
-import { getRequestHost, redirectUri, setUserTokenCookie } from '@/utils/server';
+import { ApiResponse, SignupTokenPayload } from '@/types/api';
+import { redirectUri, setUserTokenCookie } from '@/utils/server';
+import { encryptText } from '@/utils/crypto';
 
 type AuthCheckResponse = ApiResponse<{
   joined: boolean;  // 가입여부
   kakaoId: string;  // 카카오 사용자 ID
-  nickname: string; // 닉네임
+  name: string;     // 사용자명
+  profileUrl: string | null; // 프로필 URL
   token: {
     accessToken: string;  // 엑세스 토큰
     refreshToken: string; // 리프레시토큰
@@ -32,20 +33,19 @@ export async function GET(request: NextRequest) {
 
   const result: AuthCheckResponse = await res.json();
   if (result.code === 'NORMAL') {
-    const host = getRequestHost(request);
-    console.log(request.url);
-    console.log(request.nextUrl);
-    console.log(host);
-    console.log(result.data);
-
     if (result.data.joined) {
       // 토큰정보 저장
       setUserTokenCookie(result.data.token.accessToken, result.data.token.refreshToken);
       return redirectUri(request, '/');  // 이미 가입된 사용자
     } else {
-      // 가입에 필요한 카카오 ID 저장
-      cookies().set('kid', result.data.kakaoId, { httpOnly: true });
-      return redirectUri(request, '/signup');  // 신규가입
+      // 가입에 필요한 데이터를 암호화 하여 클라이언트로 전송
+      const data = encryptText(JSON.stringify({
+        id: result.data.kakaoId,
+        name: result.data.name,
+        profile: result.data.profileUrl,
+      } satisfies SignupTokenPayload));
+
+      return redirectUri(request, '/signup?d=' + data);  // 신규가입
     }
   } else {
     return new NextResponse(null, { status: 500, statusText: `${result.message} [${result.code}]` });

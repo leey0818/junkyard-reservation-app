@@ -3,16 +3,22 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+type SignupFormProps = {
+  initialName?: string;
+  secToken: string;
+};
+
 type FormValues = {
+  secToken: string;
   nickname: string;
   phoneNo: string;
   email: string;
 };
 
-export default function SignupForm() {
+export default function SignupForm(props: SignupFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {
@@ -43,6 +49,11 @@ export default function SignupForm() {
     }
   };
 
+  // 보안토큰 셋팅
+  useEffect(() => {
+    setValue('secToken', props.secToken);
+  }, [props.secToken]);
+
   return (
     <form className="mt-16" onSubmit={handleSubmit(onSubmit)}>
       <label className="block mb-8">
@@ -56,6 +67,7 @@ export default function SignupForm() {
             errors.nickname ? 'border-red-600' : 'border-gray-300',
           )}
           {...register('nickname', {
+            value: props.initialName,
             required: '닉네임을 입력하세요.',
             maxLength: {value: 20, message: '닉네임은 최대 20자리 입력 가능합니다.'},
             disabled: loading,

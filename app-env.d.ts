@@ -5,6 +5,7 @@ declare global {
       MOCK_KAKAO_REDIRECT_URI: string;
 
       BACKEND_API_URL: string;
+      DATA_ENCRYPTION_KEY: string;
     }
   }
 
