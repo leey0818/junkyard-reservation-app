@@ -6,7 +6,7 @@ export type ApiResponse<D = {}> = {
 
 /* 회원가입용 토큰 페이로드 */
 export type SignupTokenPayload = {
-  id: string;
+  id: number;
   name: string;
   profile: string | null;
 };

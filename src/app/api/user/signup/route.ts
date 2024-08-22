@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { ApiResponse, SignupTokenPayload } from '@/types/api';
 import { setUserTokenCookie } from '@/utils/server';
 import { decryptToJson } from '@/utils/crypto';

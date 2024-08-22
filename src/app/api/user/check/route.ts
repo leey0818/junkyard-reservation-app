@@ -5,8 +5,8 @@ import { encryptText } from '@/utils/crypto';
 
 type AuthCheckResponse = ApiResponse<{
   joined: boolean;  // 가입여부
-  kakaoId: string;  // 카카오 사용자 ID
-  name: string;     // 사용자명
+  kakaoId: number;  // 카카오 사용자 ID
+  nickname: string; // 사용자 닉네임
   profileUrl: string | null; // 프로필 URL
   token: {
     accessToken: string;  // 엑세스 토큰
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       // 가입에 필요한 데이터를 암호화 하여 클라이언트로 전송
       const data = encryptText(JSON.stringify({
         id: result.data.kakaoId,
-        name: result.data.name,
+        name: result.data.nickname,
         profile: result.data.profileUrl,
       } satisfies SignupTokenPayload));
 
