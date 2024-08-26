@@ -1,18 +1,12 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { getLoginUserInfo } from '@/utils/common';
 import ColouredAvatar from '@components/avatar/ColouredAvatar';
 import NoLoginedAvatar from '@components/avatar/NoLoginedAvatar';
 
-// 사용자 정보 가져오기
-const fetchUserInfo = async () => {
-  const res = await fetch('http://localhost:3000/api/user', { cache: 'no-store' });
-  if (!res.ok) return null;
-
-  const result: { data: { nickname: string; } | null; } = await res.json();
-  return result.data;
-};
-
 export default async function Home() {
-  const user = await fetchUserInfo();
+  const token = cookies().get('accessToken')?.value;
+  const user = token ? getLoginUserInfo(token) : null;
 
   return (
     <main className="px-4 py-5">
