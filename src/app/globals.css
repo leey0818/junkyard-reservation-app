@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.fade-enter, .fade-appear {
+  @apply opacity-0;
+}
+.fade-enter-active, .fade-appear-active {
+  @apply opacity-100 duration-300 ease-out;
+}
+.fade-exit {
+  @apply opacity-100;
+}
+.fade-exit-active {
+  @apply opacity-0 duration-300 ease-out;
+}
+
+.fade-slide-enter,
+.fade-slide-appear {
+  @apply opacity-0 translate-y-1/4;
+}
+.fade-slide-enter-active,
+.fade-slide-appear-active {
+  @apply opacity-100 duration-300 translate-y-0 ease-out;
+}
+.fade-slide-exit {
+  @apply opacity-100 translate-y-0;
+}
+.fade-slide-exit-active {
+  @apply opacity-0 duration-300 translate-y-1/4 ease-out;
+}
