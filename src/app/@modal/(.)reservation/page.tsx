@@ -1,37 +1,31 @@
-import Modal from '@components/Modal';
-import { forwardRef, InputHTMLAttributes } from 'react';
+import FormPage from './FormPage';
+import { doPOST } from '@/backend/service';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-type FormInputProps = InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
+type CheckoutResponse = {
+  idempotencyKey: string;
 };
 
-const FormInput = forwardRef<HTMLInputElement, FormInputProps>(function FormInput(props, ref) {
-  const inputProps = {
-    ...props,
-    label: undefined,
-  };
+export default async function Page() {
+  const accessToken = cookies().get('accessToken')?.value;
+  if (!accessToken) {
+    return redirect('/login');
+  }
 
-  return (
-    <label className="block mb-8">
-      <p className="mb-1">{props.label}</p>
-      <input
-        type="text"
-        className="border border-gray-300 rounded w-full p-1 outline-none"
-        ref={ref}
-        {...inputProps}
-      />
-    </label>
-  )
-});
+  try {
+    // 백앤드 서버에서 예약키 가져오기
+    const result = await doPOST<CheckoutResponse>('/reservation/checkout', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    });
 
-export default function Page() {
-  return (
-    <Modal>
-      <h1 className="font-semibold text-lg mb-8">예약하기</h1>
-      <form>
-        <FormInput label="성명" placeholder="성명을 입력하세요." />
-        <FormInput label="전화번호" placeholder="연락 가능한 전화번호를 입력하세요." />
-      </form>
-    </Modal>
-  )
+    if (result.code === 'NORMAL') {
+      return <FormPage secToken={result.data.idempotencyKey} />;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+  return redirect('/');
 }

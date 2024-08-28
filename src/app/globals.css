@@ -15,6 +15,9 @@
 .fade-exit-active {
   @apply opacity-0 duration-300 ease-out;
 }
+.fade-exit-done {
+  @apply opacity-0;
+}
 
 .fade-slide-enter,
 .fade-slide-appear {
@@ -29,4 +32,7 @@
 }
 .fade-slide-exit-active {
   @apply opacity-0 duration-300 translate-y-1/4 ease-out;
+}
+.fade-slide-exit-done {
+  @apply opacity-0;
 }
