@@ -13,23 +13,20 @@ export default async function Page() {
     return redirect('/');
   }
 
-  try {
-    // 백앤드 서버에서 예약키 가져오기
-    const result = await doPOST<CheckoutResponse>('/reservation/checkout', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      }
-    });
-
-    if (result.code === 'NORMAL') {
-      return (
-        <div className="p-6">
-          <FormPage secToken={result.data.idempotencyKey} />
-        </div>
-      );
+  // 백앤드 서버에서 예약키 가져오기
+  const result = await doPOST<CheckoutResponse>('/reservation/checkout', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     }
-  } catch (e) {
-    console.warn(e);
+  });
+
+  if (result.code === 'NORMAL') {
+    return (
+      <div className="p-6">
+        <FormPage secToken={result.data.idempotencyKey} />
+      </div>
+    );
+  } else {
+    throw new Error(result.message);
   }
-  return redirect('/');
 }
