@@ -28,7 +28,7 @@ export const doCallAPI = async <D = never>(uri: string, options: RequestInit): P
 
   console.log(`Backend API Call: ${uri} ${res.status} ${res.statusText}`);
 
-  if (res.ok) return await res.json();
+  if (res.ok || res.status === 500) return await res.json();
   throw new FetchError(req, res);
 };
 
