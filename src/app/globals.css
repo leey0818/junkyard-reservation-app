@@ -31,7 +31,7 @@
   @apply opacity-100 translate-y-0;
 }
 .fade-slide-exit-active {
-  @apply opacity-0 duration-300 translate-y-1/4 ease-out;
+  @apply opacity-0 duration-300 translate-y-1/4 ease-in;
 }
 .fade-slide-exit-done {
   @apply opacity-0;
