@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         idempotencyKey: body.token,
         contents: body.note,
+        clientName: body.name,
+        phoneNo: body.phoneNo,
         car: {
           make: body.vendor,
           model: body.model,
