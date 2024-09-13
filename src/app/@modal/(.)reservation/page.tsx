@@ -23,6 +23,6 @@ export default async function Page() {
   if (result.code === 'NORMAL') {
     return <FormPage secToken={result.data.idempotencyKey} />;
   } else {
-    throw new Error(`${result.code} ${result.message || ''}`);
+    return <FormPage error={`${result.code} ${result.message || ''}`} />;
   }
 }

@@ -2,6 +2,8 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { doPOST } from '@/backend/service';
 import FormPage from './FormPage';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
 
 type CheckoutResponse = {
   idempotencyKey: string;
@@ -20,13 +22,19 @@ export default async function Page() {
     }
   });
 
-  if (result.code === 'NORMAL') {
+  if (result.code !== 'NORMAL') {
     return (
-      <div className="p-6">
-        <FormPage secToken={result.data.idempotencyKey} />
+      <div className="text-center pt-6">
+        <FontAwesomeIcon icon={faWarning} className="text-yellow-300 mb-8" size="4x"/>
+        <h1>알 수 없는 오류가 발생했습니다.</h1>
+        <p>{result.code} {result.message}</p>
       </div>
     );
-  } else {
-    throw new Error(`${result.code} ${result.message || ''}`);
   }
+
+  return (
+    <div className="p-6">
+      <FormPage secToken={result.data.idempotencyKey} />
+    </div>
+  );
 }
