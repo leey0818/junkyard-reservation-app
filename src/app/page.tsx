@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { getLoginUserInfo } from '@/utils/common';
-import ColouredAvatar from '@components/avatar/ColouredAvatar';
 import NoLoginedAvatar from '@components/avatar/NoLoginedAvatar';
+import LoginedAvatar from '@components/avatar/LoginedAvatar';
 
 export default async function Home() {
   const token = cookies().get('accessToken')?.value;
@@ -10,8 +10,8 @@ export default async function Home() {
 
   return (
     <main className="px-4 py-5">
-      <div className="text-right mb-4 leading-0">
-        {user ? <ColouredAvatar text={user.nickname} /> : <NoLoginedAvatar />}
+      <div className="text-right mb-4 leading-0 relative">
+        {user ? <LoginedAvatar text={user.nickname} /> : <NoLoginedAvatar />}
       </div>
 
       <div className="text-center *:mb-4">
