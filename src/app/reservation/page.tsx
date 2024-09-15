@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { doPOST } from '@/backend/service';
-import FormPage from './FormPage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
+import ReservationForm from '@/app/reservation/ReservationForm';
+import AppHeader from '@components/AppHeader';
 
 type CheckoutResponse = {
   idempotencyKey: string;
@@ -33,8 +34,11 @@ export default async function Page() {
   }
 
   return (
-    <div className="p-6">
-      <FormPage secToken={result.data.idempotencyKey} />
-    </div>
+    <>
+      <AppHeader>차량 예약</AppHeader>
+      <div className="p-6">
+        <ReservationForm secToken={result.data.idempotencyKey} />
+      </div>
+    </>
   );
 }

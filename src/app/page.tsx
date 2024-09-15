@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 import { getLoginUserInfo } from '@/utils/common';
 import ColouredAvatar from '@components/avatar/ColouredAvatar';
 import NoLoginedAvatar from '@components/avatar/NoLoginedAvatar';
-import NoCacheLink from '@components/NoCacheLink';
 
 export default async function Home() {
   const token = cookies().get('accessToken')?.value;
@@ -23,10 +22,10 @@ export default async function Home() {
         <p>지금 바로 시작하여 폐차의 모든 과정을<br/>간편하게 해결해보세요!</p>
 
         {user
-          ? <NoCacheLink
+          ? <Link
             href="/reservation"
             className="inline-block border bg-blue-500 text-white border-blue-600 rounded px-3 py-1"
-          >예약하기</NoCacheLink>
+          >예약하기</Link>
           : <Link
             href="/login"
             className="inline-block border bg-blue-500 text-white border-blue-600 rounded px-3 py-1"
