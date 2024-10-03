@@ -12,7 +12,7 @@ export const handlers = [
         phoneNo: '01011112222',
         startTime: '2024-09-08T10:24:42.0059463',
         endTime: '2024-09-09T10:24:42.0059463',
-        status: 'PENDING',
+        status: 'REJECTED',
         car: {
           make: '현대',
           model: '아반떼 19년식',

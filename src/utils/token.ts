@@ -26,6 +26,8 @@ export const getAccessTokenUsingRefreshToken = async (token: string) => {
         accessToken: result.data.token.accessToken,
         refreshToken: result.data.token.refreshToken,
       };
+    } else {
+      console.log(JSON.stringify(result));
     }
     return null;
   } catch (e) {

@@ -10,6 +10,7 @@ type ReservationData = {
   userId: string;
   clientName: string;
   phoneNo: string;
+  contents: string;
   startTime: string;
   endTime: string;
   status: string;
@@ -28,8 +29,31 @@ type ReservationData = {
   }[];
 };
 
-const toPhoneNoFormat = (phoneNo: string) => phoneNo.replace(/^(01\d)-?(\d{3,4})-?(\d{4})$/, '$1-$2-$3');
-const toAmountFormat = (amount: number) => Number(amount).toLocaleString() + '원';
+const toPhoneNoFormat = (phoneNo: string) => phoneNo?.replace(/^(01\d)-?(\d{3,4})-?(\d{4})$/, '$1-$2-$3');
+const toAmountFormat = (amount: number) => isNaN(amount) ? '-' : Number(amount).toLocaleString() + '원';
+
+const getStatusBadge = (status: string) => {
+  //상태값: PENDING, CONFIRMED, CANCELED, REJECTED, COMPLETED
+  const state = (() => {
+    switch (status) {
+      case 'PENDING': return 'wait';
+      case 'CONFIRMED': return 'proc';
+      case 'REJECTED': return 'fail';
+      default: return 'done';
+    }
+  })();
+  const stateText = (() => {
+    switch (status) {
+      case 'PENDING': return '대기';
+      case 'CONFIRMED': return '진행중';
+      case 'CANCELED': return '취소됨';
+      case 'REJECTED': return '거절됨';
+      case 'COMPLETED': return '완료';
+    }
+  })();
+
+  return <StateBadge state={state} text={stateText} className="absolute top-3 right-3" />
+};
 
 export default async function Page() {
   const accessToken = cookies().get('accessToken')?.value;
@@ -63,14 +87,14 @@ export default async function Page() {
         {result.data?.length > 0
           ? result.data.map((o) =>
             <div key={o.reservationId} className="relative border rounded p-4 pt-3 bg-white mt-5 first:mt-0">
-              <StateBadge state="proc" className="absolute top-3 right-3"/>
+              {getStatusBadge(o.status)}
               <p className="font-bold text-xl mb-2">{o.car.licensePlate}</p>
               <p className="text-sm font-semibold mt-2">차량</p>
               <p>{o.car.make} / {o.car.model}</p>
               <p className="text-sm font-semibold mt-2">예약자</p>
               <p>{o.clientName} / {toPhoneNoFormat(o.phoneNo)}</p>
               <p className="text-sm font-semibold mt-2">예약내용</p>
-              <p>-</p>
+              <p>{o.contents}</p>
               <p className="text-sm font-semibold mt-2">견적 정보</p>
               <ul>
                 {o.estimate?.length > 0

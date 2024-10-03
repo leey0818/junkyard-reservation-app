@@ -23,6 +23,7 @@ export default async function Page() {
     }
   });
 
+  console.log(JSON.stringify(result));
   if (result.code !== 'NORMAL') {
     return (
       <div className="text-center pt-6">
