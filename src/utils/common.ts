@@ -14,3 +14,15 @@ export const getLoginUserInfo = (token: string) => {
     return null;
   }
 };
+
+/**
+ * 휴대폰번호 포맷팅
+ * @param phoneNo 휴대폰번호
+ */
+export const toPhoneNoFormat = (phoneNo: string) => phoneNo.replace(/^(01\d)-?(\d{3,4})-?(\d{4})$/, '$1-$2-$3');
+
+/**
+ * 금액 포맷팅
+ * @param amount 금액
+ */
+export const toAmountFormat = (amount: number) => isNaN(amount) ? '-' : Number(amount).toLocaleString() + '원';
