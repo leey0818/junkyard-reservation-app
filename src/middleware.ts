@@ -33,6 +33,13 @@ export default async function middleware(req: NextRequest) {
           ['Set-Cookie', cookie.serialize('refreshToken', refreshToken, { expires: refExpires, httpOnly: true })],
         ],
       });
+    } else {
+      // 리프레시 토큰이 있는데, 갱신실패하면 토큰 삭제
+      return NextResponse.next({
+        headers: [
+          ['Set-Cookie', cookie.serialize('refreshToken', '', { maxAge: 0 })],
+        ],
+      });
     }
   }
 }
