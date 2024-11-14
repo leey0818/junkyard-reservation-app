@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { cookies } from 'next/headers';
+import { getAccessTokenFromCookie } from '@/utils/token';
 import { getLoginUserInfo } from '@/utils/common';
 import NoLoginedAvatar from '@components/avatar/NoLoginedAvatar';
 import LoginedAvatar from '@components/avatar/LoginedAvatar';
 
 export default async function Home() {
-  const token = cookies().get('accessToken')?.value;
+  const token = await getAccessTokenFromCookie();
   const user = token ? getLoginUserInfo(token) : null;
 
   return (

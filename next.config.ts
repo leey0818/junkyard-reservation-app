@@ -1,9 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   output: process.env.CI ? 'standalone' : undefined,
-  experimental: {
-    instrumentationHook: true,
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
   },
+
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,

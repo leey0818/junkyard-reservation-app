@@ -1,8 +1,8 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { doPOST } from '@/backend/service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
+import { getAccessTokenFromCookie } from '@/utils/token';
 import ReservationForm from '@/app/reservation/ReservationForm';
 import AppHeader from '@components/AppHeader';
 
@@ -11,7 +11,7 @@ type CheckoutResponse = {
 };
 
 export default async function Page() {
-  const accessToken = cookies().get('accessToken')?.value;
+  const accessToken = await getAccessTokenFromCookie();
   if (!accessToken) {
     return redirect('/');
   }

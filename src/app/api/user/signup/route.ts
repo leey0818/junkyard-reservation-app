@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     if (result.code === 'NORMAL') {
       // 토큰 쿠키에 저장
-      setUserTokenToCookie(result.data.token.accessToken, result.data.token.refreshToken);
+      await setUserTokenToCookie(result.data.token.accessToken, result.data.token.refreshToken);
       return NextResponse.json({ success: true });
     } else {
       return NextResponse.json({ success: false, message: `${result.message} [${result.code}]`});

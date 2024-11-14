@@ -46,20 +46,38 @@ export const isExpiredAccessToken = (token: string) => {
 };
 
 /**
+ * 쿠키에 저장된 엑세스 토큰을 가져옵니다.
+ */
+export const getAccessTokenFromCookie = async () => {
+  const cookieStore = await cookies();
+  return cookieStore.get('accessToken')?.value;
+};
+
+/**
+ * 쿠키에 저장된 리프레시 토큰을 가져옵니다.
+ */
+export const getRefreshTokenFromCookie = async () => {
+  const cookieStore = await cookies();
+  return cookieStore.get('refreshToken')?.value;
+};
+
+/**
  * 토큰정보 쿠키에 셋팅
  * @param accessToken 엑세스 토큰
  * @param refreshToken 리프레시 토큰
  */
-export const setUserTokenToCookie = (accessToken: string, refreshToken: string) => {
+export const setUserTokenToCookie = async (accessToken: string, refreshToken: string) => {
+  const cookieStore = await cookies();
+
   // JWT 엑세스토큰 쿠키에 저장
   let payload = decodeJwt(accessToken);
-  cookies().set('accessToken', accessToken, {
+  cookieStore.set('accessToken', accessToken, {
     expires: payload.exp ? payload.exp * 1000 : undefined,
   });
 
   // JWT 리프레시토큰 쿠키에 저장 (httpOnly)
   payload = decodeJwt(refreshToken);
-  cookies().set('refreshToken', refreshToken, {
+  cookieStore.set('refreshToken', refreshToken, {
     httpOnly: true,
     expires: payload.exp ? payload.exp * 1000 : undefined,
   });
@@ -68,7 +86,8 @@ export const setUserTokenToCookie = (accessToken: string, refreshToken: string) 
 /**
  * 쿠키에 저장된 토큰정보 삭제
  */
-export const deleteUserTokenForCookie = () => {
-  cookies().delete('accessToken');
-  cookies().delete('refreshToken');
+export const deleteUserTokenForCookie = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete('accessToken');
+  cookieStore.delete('refreshToken');
 };

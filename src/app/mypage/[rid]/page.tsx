@@ -1,14 +1,18 @@
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { doGET } from '@/backend/service';
-import { ReservationData } from '@/app/mypage/type';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons/faPen';
-import AppHeader from '@components/AppHeader';
+import { getAccessTokenFromCookie } from '@/utils/token';
 import { toPhoneNoFormat } from '@/utils/common';
+import { ReservationData } from '@/app/mypage/type';
+import AppHeader from '@components/AppHeader';
+import CancelButton from '@/app/mypage/[rid]/CancelButton';
 
-export default async function Page({ params }: { params: { rid: string } }) {
-  const accessToken = cookies().get('accessToken')?.value;
+type Params = Promise<{ rid: string; }>;
+
+export default async function Page(props: { params: Params }) {
+  const params = await props.params;
+  const accessToken = await getAccessTokenFromCookie();
   if (!accessToken) {
     return redirect('/');
   }
@@ -69,7 +73,7 @@ export default async function Page({ params }: { params: { rid: string } }) {
         <p className="mb-6">아직 등록된 견적이 없습니다.</p>
 
         <div className="text-sm text-center">
-          <a className="underline text-gray-400">예약 취소</a>
+          <CancelButton id={result.data.reservationId} />
         </div>
       </div>
     </>

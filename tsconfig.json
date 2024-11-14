@@ -2,10 +2,12 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "target": "ES2017",
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,

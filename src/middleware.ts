@@ -1,12 +1,16 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { decodeJwt } from 'jose';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { getAccessTokenUsingRefreshToken, isExpiredAccessToken } from '@/utils/token';
+import {
+  getAccessTokenUsingRefreshToken,
+  getAccessTokenFromCookie,
+  getRefreshTokenFromCookie,
+  isExpiredAccessToken,
+} from '@/utils/token';
 
 export default async function middleware(req: NextRequest) {
-  const accessToken = cookies().get('accessToken')?.value;
-  const refreshToken = cookies().get('refreshToken')?.value;
+  const accessToken = await getAccessTokenFromCookie();
+  const refreshToken = await getRefreshTokenFromCookie();
 
   // 엑세스 토큰이 만료되었으면 재발급 요청 (리프레시 토큰 있을 때)
   if (refreshToken && (!accessToken || isExpiredAccessToken(accessToken))) {

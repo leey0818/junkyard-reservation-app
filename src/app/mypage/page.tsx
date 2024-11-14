@@ -1,13 +1,12 @@
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { doGET } from '@/backend/service';
+import { getAccessTokenFromCookie } from '@/utils/token';
 import { ReservationData } from '@/app/mypage/type';
-import AppHeader from '@components/AppHeader';
 import ReservationCard from '@/app/mypage/ReservationCard';
-
+import AppHeader from '@components/AppHeader';
 
 export default async function Page() {
-  const accessToken = cookies().get('accessToken')?.value;
+  const accessToken = await getAccessTokenFromCookie();
   if (!accessToken) {
     return redirect('/');
   }

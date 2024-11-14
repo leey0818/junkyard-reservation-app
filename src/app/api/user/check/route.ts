@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     if (result.code === 'NORMAL') {
       if (result.data.joined) {
         // 토큰정보 저장
-        setUserTokenToCookie(result.data.token.accessToken, result.data.token.refreshToken);
+        await setUserTokenToCookie(result.data.token.accessToken, result.data.token.refreshToken);
         return redirectUri(request, '/');  // 이미 가입된 사용자
       } else {
         // 가입에 필요한 데이터를 암호화 하여 클라이언트로 전송

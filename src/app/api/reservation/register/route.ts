@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { doPOST, FetchError } from '@/backend/service';
-import { cookies } from 'next/headers';
+import { getAccessTokenFromCookie } from '@/utils/token';
 
 type RequestBody = {
   token: string;
@@ -14,7 +14,7 @@ type RequestBody = {
 
 export async function POST(req: NextRequest) {
   const body: RequestBody = await req.json();
-  const accessToken = cookies().get('accessToken')?.value;
+  const accessToken = await getAccessTokenFromCookie();
   if (!accessToken) {
     return NextResponse.json({ success: false, message: '인증 실패' });
   }

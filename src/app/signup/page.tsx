@@ -3,14 +3,10 @@ import { SignupTokenPayload } from '@/types/api';
 import { decryptToJson } from '@/utils/crypto';
 import SignupForm from './form';
 
-type ServerProps = {
-  searchParams?: {
-    d?: string
-  };
-};
+type SearchParams = Promise<{ d?: string; }>;
 
-export default function Page({ searchParams }: ServerProps) {
-  const token = searchParams?.d;
+export default async function Page({ searchParams }: { searchParams: SearchParams }) {
+  const token = (await searchParams).d;
   const data = token ? decryptToJson<SignupTokenPayload>(token) : null;
 
   // 토큰값이 안넘어왔거나, 복호화 실패이면 로그인 페이지로 이동

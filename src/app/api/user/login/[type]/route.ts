@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { doPOST } from '@/backend/service';
 
+type Params = Promise<{ type: string; }>;
 type KakaoResponse = {
   clientId: string;    // 카카오 클라이언트 ID
   callbackUrl: string; // 카카오 로그인 콜백 URL
@@ -29,9 +30,11 @@ async function doLoginKakao() {
   }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { type: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Params }) {
+  const { type } = await params;
+
   try {
-    switch (params.type) {
+    switch (type) {
       case 'kakao':
         return await doLoginKakao();
       default:
