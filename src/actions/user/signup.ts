@@ -33,6 +33,9 @@ export const doSignup = async (secToken: string, formData: FormValues) => {
 
   try {
     const result = await doPOST<JoinResponse>('/member/join', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         method: 'kakao',
         id: payload.id,
