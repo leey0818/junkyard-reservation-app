@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { doSignup } from '@/actions/user/signup';
 
 type SignupFormProps = {
   initialName?: string;
@@ -12,15 +12,13 @@ type SignupFormProps = {
 };
 
 type FormValues = {
-  secToken: string;
   nickname: string;
   phoneNo: string;
   email: string;
 };
 
 export default function SignupForm(props: SignupFormProps) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const {
     register,
     formState: { errors },
@@ -30,31 +28,14 @@ export default function SignupForm(props: SignupFormProps) {
     defaultValues: { nickname: props.initialName },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/user/signup', { method: 'POST', body: JSON.stringify(data) });
-      if (res.ok) {
-        const result = await res.json();
-        if (result.success) {
-          alert('정상적으로 회원가입 되었습니다.');
-          router.push('/');
-        } else {
-          alert(result.message);
-        }
-      } else {
-        alert('서버와 연결에 실패하였습니다. [' + res.status + ']');
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    startTransition(async () => {
+      const { success, message } = await doSignup(props.secToken, data);
+      if (!success) {
+        alert(message);
       }
-    } finally {
-      setLoading(false);
-    }
+    });
   };
-
-  // 보안토큰 셋팅
-  useEffect(() => {
-    setValue('secToken', props.secToken);
-  }, [setValue, props.secToken]);
 
   return (
     <form className="mt-16" onSubmit={handleSubmit(onSubmit)}>
@@ -71,7 +52,7 @@ export default function SignupForm(props: SignupFormProps) {
           {...register('nickname', {
             required: '닉네임을 입력하세요.',
             maxLength: {value: 20, message: '닉네임은 최대 20자리 입력 가능합니다.'},
-            disabled: loading,
+            disabled: isPending,
           })}
         />
         {errors.nickname && (<p className="text-red-600 text-sm">{errors.nickname.message}</p>)}
@@ -89,7 +70,7 @@ export default function SignupForm(props: SignupFormProps) {
           {...register('phoneNo', {
             required: '휴대폰 번호를 입력하세요.',
             pattern: {value: /^(01\d)-?(\d{3,4})-?(\d{4})$/, message: '올바른 휴대폰 번호를 입력하세요.'},
-            disabled: loading,
+            disabled: isPending,
             onChange: (evt) => {
               const value = evt.target.value.replace(/[^0-9]/g, '');
               setValue('phoneNo', value.replace(/^(01\d)-?(\d{3,4})-?(\d{4})$/, '$1-$2-$3'), {shouldValidate: true});
@@ -110,7 +91,7 @@ export default function SignupForm(props: SignupFormProps) {
           {...register('email', {
             required: '이메일을 입력하세요.',
             pattern: {value: /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: '올바른 이메일을 입력하세요.'},
-            disabled: loading,
+            disabled: isPending,
           })}
         />
         {errors.email && (<p className="text-red-600 text-sm">{errors.email.message}</p>)}
@@ -119,9 +100,9 @@ export default function SignupForm(props: SignupFormProps) {
       <button
         type="submit"
         className="block mt-12 w-full bg-blue-500 shadow rounded py-2 text-white text-center disabled:bg-blue-500/70"
-        disabled={loading}
+        disabled={isPending}
       >
-        {loading && <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2"/>}
+        {isPending && <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2"/>}
         가입하기
       </button>
     </form>
