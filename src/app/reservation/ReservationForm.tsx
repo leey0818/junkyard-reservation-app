@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useTransition } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { createReservation } from '@/actions/reservation/create';
 import FormInput from './FormInput';
 
 type ReservationFormProps = {
@@ -10,7 +11,6 @@ type ReservationFormProps = {
 };
 
 type FormValues = {
-  token: string;
   name: string;
   phoneNo: string;
   vendor: string;
@@ -21,7 +21,7 @@ type FormValues = {
 
 export default function ReservationForm(props: ReservationFormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const {
     register,
     formState: { errors },
@@ -29,29 +29,17 @@ export default function ReservationForm(props: ReservationFormProps) {
     handleSubmit,
   } = useForm<FormValues>();
 
-  const onFormSubmit: SubmitHandler<FormValues> = useCallback(async (formData) => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/reservation/register', { method: 'POST', body: JSON.stringify(formData) });
-      if (res.ok) {
-        const result = await res.json();
-        if (result.success) {
-          alert('정상 예약되었습니다.');
-          router.replace('/');
-        } else {
-          alert(`예약 실패: ${result.message}`);
-        }
+  const onFormSubmit: SubmitHandler<FormValues> = (formData) => {
+    startTransition(async () => {
+      const { success, message } = await createReservation(props.secToken, formData);
+      if (success) {
+        alert('정상 예약되었습니다.');
+        router.replace('/');
       } else {
-        alert(`서버와 통신 중 오류가 발생하였습니다. [${res.status}]`);
+        alert(message);
       }
-    } finally {
-      setLoading(false);
-    }
-  }, [router]);
-
-  useEffect(() => {
-    setValue('token', props.secToken);
-  }, [setValue, props.secToken]);
+    });
+  };
 
   return (
     <>
@@ -59,7 +47,7 @@ export default function ReservationForm(props: ReservationFormProps) {
       <p className="mb-6">예약하실 차량 정보를 입력해 주세요.</p>
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <FormInput
-          {...register('name', { required: true, disabled: loading })}
+          {...register('name', { required: true, disabled: isPending })}
           required={true}
           error={!!errors.name}
           label="성명"
@@ -69,7 +57,7 @@ export default function ReservationForm(props: ReservationFormProps) {
         <FormInput
           {...register('phoneNo', {
             required: true,
-            disabled: loading,
+            disabled: isPending,
             pattern: /^(01\d)-?(\d{3,4})-?(\d{4})$/,
             onChange: (evt) => {
               const value = evt.target.value.replace(/[^0-9]/g, '');
@@ -83,35 +71,35 @@ export default function ReservationForm(props: ReservationFormProps) {
           maxLength={14}
         />
         <FormInput
-          {...register('vendor', { required: true, disabled: loading })}
+          {...register('vendor', { required: true, disabled: isPending })}
           required={true}
           error={!!errors.vendor}
-          disabled={loading}
+          disabled={isPending}
           label="제조사"
           placeholder="차량 제조사를 입력하세요. ex) 현대, 기아, 벤츠"
           maxLength={10}
         />
         <FormInput
-          {...register('model', { required: true, disabled: loading })}
+          {...register('model', { required: true, disabled: isPending })}
           required={true}
           error={!!errors.model}
-          disabled={loading}
+          disabled={isPending}
           label="모델명"
           placeholder="차량 모델명을 입력하세요. ex) 소나타, 그랜저"
           maxLength={20}
         />
         <FormInput
-          {...register('carNo', { required: true, disabled: loading })}
+          {...register('carNo', { required: true, disabled: isPending })}
           required={true}
           error={!!errors.carNo}
-          disabled={loading}
+          disabled={isPending}
           label="차량번호"
           placeholder="차량 번호를 입력하세요."
           maxLength={9}
         />
         <FormInput
           {...register('note')}
-          disabled={loading}
+          disabled={isPending}
           label="예약내용"
           placeholder="추가로 전달할 내용을 입력하세요."
         />
@@ -119,7 +107,7 @@ export default function ReservationForm(props: ReservationFormProps) {
         <button
           type="submit"
           className="w-full border border-blue-600 bg-blue-500 text-white rounded px-3 py-1 mt-4"
-          disabled={loading}
+          disabled={isPending}
         >예약하기
         </button>
       </form>

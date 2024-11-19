@@ -33,7 +33,7 @@ const getStatusBadge = (status: string) => {
 
 export default function ReservationCard({ data }: ReservationCardProps) {
   return (
-    <Link href={`/mypage/${data.reservationId}`}>
+    <Link href={`/mypage/${data.reservationId}`} className="block mb-5 last:mb-0">
       <div className="relative border rounded p-4 pt-3 bg-white mb-8 last:mb-0 shadow-lg">
         {getStatusBadge(data.status)}
         <p className="font-bold text-xl mb-2">{data.car.licensePlate}</p>

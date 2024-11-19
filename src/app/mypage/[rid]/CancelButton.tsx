@@ -1,7 +1,7 @@
 'use client';
 
-import { cancelReservation } from '@/actions/mypage/cancel-reservation';
 import { useRouter } from 'next/navigation';
+import { cancelReservation } from '@/actions/reservation/cancel';
 
 type CancelButtonProps = {
   id: string;
@@ -15,13 +15,13 @@ export default function CancelButton({ id }: CancelButtonProps) {
     const result = await cancelReservation(id);
     if (result.success) {
       alert('예약이 취소되었습니다.');
-      router.replace('/mypage');
+      router.back();
     } else {
       alert(result.message);
     }
   };
 
   return (
-    <a className="underline text-gray-400" onClick={onClickCancel}>예약 취소</a>
+    <a className="underline text-gray-400 cursor-pointer" onClick={onClickCancel}>예약 취소</a>
   );
 }
