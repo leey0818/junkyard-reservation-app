@@ -23,8 +23,8 @@ export default async function Page() {
     }
   });
 
-  console.log(JSON.stringify(result));
   if (result.code !== 'NORMAL') {
+    console.log(JSON.stringify(result));
     return (
       <div className="text-center pt-6">
         <FontAwesomeIcon icon={faWarning} className="text-yellow-300 mb-8" size="4x"/>

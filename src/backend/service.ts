@@ -18,7 +18,7 @@ export class FetchError extends Error {
  * @param uri API URI
  * @param options fetch 옵션
  */
-const doCallAPI = async <D = never>(uri: string, options: RequestInit): Promise<ApiResponse<D>> => {
+export const doCallAPI = async <D = never>(uri: string, options: RequestInit): Promise<ApiResponse<D>> => {
   const req = new Request(process.env.BACKEND_API_URL + uri, {
     ...options,
   });

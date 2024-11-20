@@ -1,12 +1,11 @@
 import { redirect } from 'next/navigation';
 import { doGET } from '@/backend/service';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons/faPen';
 import { getAccessTokenFromCookie } from '@/utils/token';
 import { toPhoneNoFormat } from '@/utils/common';
 import { ReservationData } from '@/types/reservation';
 import AppHeader from '@components/AppHeader';
 import CancelButton from '@components/reservation/CancelButton';
+import EditableContent from '@components/reservation/EditableContent';
 
 type Params = Promise<{ rid: string; }>;
 
@@ -51,6 +50,7 @@ export default async function Page(props: { params: Params }) {
             <p>{result.data.car.model}</p>
           </div>
         </div>
+
         <h1 className="text-xl font-bold">예약자 정보</h1>
         <div className="grid grid-cols-2 mb-6">
           <div>
@@ -62,15 +62,13 @@ export default async function Page(props: { params: Params }) {
             <p>{toPhoneNoFormat(result.data.phoneNo ?? '')}</p>
           </div>
         </div>
-        <h1 className="text-xl font-bold">
-          <span>예약 내용</span>
-          <FontAwesomeIcon icon={faPen} className="text-sm ml-2"/>
-        </h1>
-        {/*<textarea className="border resize-none w-full rounded h-16"></textarea>*/}
-        <p className="mb-6">{result.data.contents}</p>
 
-        <h1 className="text-xl font-bold">견적 정보</h1>
-        <p className="mb-6">아직 등록된 견적이 없습니다.</p>
+        <EditableContent id={params.rid} content={result.data.contents} />
+
+        <div>
+          <h1 className="text-xl font-bold">견적 정보</h1>
+          <p className="mb-6">아직 등록된 견적이 없습니다.</p>
+        </div>
 
         <div className="text-sm text-center">
           <CancelButton id={result.data.reservationId} />
