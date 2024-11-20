@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons/faPen';
 import { getAccessTokenFromCookie } from '@/utils/token';
 import { toPhoneNoFormat } from '@/utils/common';
-import { ReservationData } from '@/app/mypage/type';
+import { ReservationData } from '@/types/reservation';
 import AppHeader from '@components/AppHeader';
-import CancelButton from '@/app/mypage/[rid]/CancelButton';
+import CancelButton from '@components/reservation/CancelButton';
 
 type Params = Promise<{ rid: string; }>;
 
@@ -29,7 +29,7 @@ export default async function Page(props: { params: Params }) {
     return (
       <>
         <AppHeader>예약 상세</AppHeader>
-        <div className="p-4 bg-neutral-50 min-h-[calc(100vh-48px)]">
+        <div className="p-4">
           <p className="text-center">일시적으로 데이터를 가져올 수 없습니다.<br/>잠시 후 다시 시도해 주세요.</p>
         </div>
       </>
@@ -39,7 +39,7 @@ export default async function Page(props: { params: Params }) {
   return (
     <>
       <AppHeader>{result.data.car.licensePlate}</AppHeader>
-      <div className="p-4 bg-neutral-50 min-h-[calc(100vh-48px)]">
+      <div className="p-4">
         <h1 className="text-xl font-bold">차량 정보</h1>
         <div className="grid grid-cols-2 mb-6">
           <div>

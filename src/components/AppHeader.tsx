@@ -8,7 +8,7 @@ type AppHeaderProps = {
 
 export default function AppHeader(props: AppHeaderProps) {
   return (
-    <header className="relative flex items-center justify-center h-12 border-b">
+    <header className="absolute top-0 w-full h-12 flex items-center justify-center border-b bg-white">
       {props.allowBack !== false && <HeaderBackButton />}
       <div className="text-center font-semibold text-xl">{props.children}</div>
     </header>

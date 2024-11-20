@@ -3,7 +3,7 @@ import { doPOST } from '@/backend/service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
 import { getAccessTokenFromCookie } from '@/utils/token';
-import ReservationForm from '@/app/reservation/ReservationForm';
+import ReservationForm from '@/app/(with-appheader)/reservation/ReservationForm';
 import AppHeader from '@components/AppHeader';
 
 type CheckoutResponse = {

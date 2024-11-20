@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import classNames from 'classnames';
 import StateBadge from '@components/StateBadge';
-import { ReservationData } from '@/app/mypage/type';
+import { ReservationData } from '@/types/reservation';
 import { toAmountFormat, toPhoneNoFormat } from '@/utils/common';
-import Link from 'next/link';
 
 type ReservationCardProps = {
   data: ReservationData;
