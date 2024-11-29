@@ -22,7 +22,7 @@ export default async function KakaoLoginButton() {
   return (
     <form className="w-full min-w-48 max-w-96" action={async () => {
       'use server';
-      await signIn('kakao');
+      await signIn('kakao', { redirectTo: '/' });
     }}>
       <button
         type="submit"

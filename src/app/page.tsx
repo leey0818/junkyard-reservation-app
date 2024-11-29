@@ -3,10 +3,14 @@ import { getAccessTokenFromCookie } from '@/utils/token';
 import { getLoginUserInfo } from '@/utils/common';
 import NoLoginedAvatar from '@components/avatar/NoLoginedAvatar';
 import LoginedAvatar from '@components/avatar/LoginedAvatar';
+import { auth } from '@/auth';
 
 export default async function Home() {
+  const session = await auth();
   const token = await getAccessTokenFromCookie();
   const user = token ? getLoginUserInfo(token) : null;
+
+  console.log(session);
 
   return (
     <main className="px-4 py-5">
