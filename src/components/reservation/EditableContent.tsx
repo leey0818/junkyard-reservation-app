@@ -58,7 +58,7 @@ export default function EditableContent(props: EditableContentProps) {
             </button>
           </div>
         </div>
-        : <p>{props.content}</p>}
+        : <p className="whitespace-pre-wrap break-all">{props.content}</p>}
     </div>
   );
 }

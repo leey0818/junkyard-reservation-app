@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { doPOST, FetchError } from '@/backend/service';
 import { getAccessTokenFromCookie } from '@/utils/token';
+import { revalidatePath } from 'next/cache';
 
 /**
  * 예약 취소 API (서버 액션)
@@ -27,6 +28,7 @@ export const cancelReservation = async (id: string) => {
     });
 
     if (result.code === 'NORMAL') {
+      revalidatePath('/mypage');  // 내 예약페이지 새로고침
       return { success: true };
     } else {
       return { success: false, message: `${result.message} [${result.code}]` };

@@ -3,6 +3,9 @@ import { doGET } from '@/backend/service';
 import { getAccessTokenFromCookie } from '@/utils/token';
 import { ReservationData } from '@/types/reservation';
 import ReservationCard from '@components/reservation/ReservationCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import Link from 'next/link';
 
 export default async function ReservationCardList() {
   const accessToken = await getAccessTokenFromCookie();
@@ -32,7 +35,16 @@ export default async function ReservationCardList() {
 
   return (
     <>
-      <p className="mb-3 text-gray-500 text-center">예약 내역을 클릭하면 상세 화면으로 이동합니다</p>
+      <div className="mb-3 text-center relative">
+        <p className="text-gray-500">예약 내역을 클릭하면 상세 화면으로 이동합니다</p>
+        <Link
+          href="/reservation"
+          className="absolute right-0 top-0 text-xs inline-block border bg-blue-500 text-white border-blue-600 rounded-full px-2 py-0.5"
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-1" />
+          예약 추가
+        </Link>
+      </div>
       {result.data.map((o) => <ReservationCard key={o.reservationId} data={o}/>)}
     </>
   );
