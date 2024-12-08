@@ -4,6 +4,7 @@ import { getAccessTokenFromCookie } from '@/utils/token';
 import { toPhoneNoFormat } from '@/utils/common';
 import { ReservationData } from '@/types/reservation';
 import AppHeader from '@components/AppHeader';
+import StateBadge from '@components/StateBadge';
 import CancelButton from '@components/reservation/CancelButton';
 import EditableContent from '@components/reservation/EditableContent';
 
@@ -38,7 +39,9 @@ export default async function Page(props: { params: Params }) {
   return (
     <>
       <AppHeader>{result.data.car.licensePlate}</AppHeader>
-      <div className="p-4">
+      <div className="m-4 relative">
+        <StateBadge status={result.data.status} className="absolute top-0 right-0" />
+
         <h1 className="text-xl font-bold">차량 정보</h1>
         <div className="grid grid-cols-2 mb-6">
           <div>
@@ -70,9 +73,9 @@ export default async function Page(props: { params: Params }) {
           <p className="mb-6">아직 등록된 견적이 없습니다.</p>
         </div>
 
-        <div className="text-sm text-center">
+        {result.data.status === 'PENDING' && <div className="text-sm text-center">
           <CancelButton id={result.data.reservationId} />
-        </div>
+        </div>}
       </div>
     </>
   )

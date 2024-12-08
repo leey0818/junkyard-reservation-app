@@ -2,15 +2,33 @@ import classNames from 'classnames';
 
 type StateBadgeProps = {
   className?: string;
-  state: 'wait' | 'proc' | 'fail' | 'done';
-  text?: string;
+  status: string;
 }
 
 export default function StateBadge(props: StateBadgeProps) {
-  const isStateWait = props.state === 'wait';
-  const isStateProc = props.state === 'proc';
-  const isStateFail = props.state === 'fail';
-  const isStateDone = props.state === 'done';
+  const state = (() => {
+    switch (props.status) {
+      case 'PENDING': return 'wait';
+      case 'CONFIRMED': return 'proc';
+      case 'REJECTED': return 'fail';
+      default: return 'done';
+    }
+  })();
+  const stateText = (() => {
+    switch (props.status) {
+      case 'PENDING': return '대기';
+      case 'CONFIRMED': return '진행중';
+      case 'CANCELED': return '취소됨';
+      case 'REJECTED': return '거절됨';
+      case 'COMPLETED': return '완료';
+      default: return '';
+    }
+  })();
+
+  const isStateWait = state === 'wait';
+  const isStateProc = state === 'proc';
+  const isStateFail = state === 'fail';
+  const isStateDone = state === 'done';
 
   return (
     <span
@@ -22,6 +40,6 @@ export default function StateBadge(props: StateBadgeProps) {
         isStateFail && 'bg-red-400',
         isStateDone && 'bg-sky-400',
       )}
-    >{props.text ?? (isStateWait ? '대기' : isStateProc ? '진행중' : isStateFail ? '실패' : isStateDone ? '완료' : '')}</span>
+    >{stateText}</span>
   )
 }
