@@ -22,7 +22,6 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.52.2",
     "react-tooltip": "^5.28.0",
-    "react-transition-group": "^4.4.5",
     "sharp": "^0.33.4",
     "uniqolor": "^1.1.1"
   },
@@ -31,7 +30,6 @@
     "@types/node": "^20",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
-    "@types/react-transition-group": "^4.4.11",
     "eslint": "^8",
     "eslint-config-next": "^15.0.3",
     "msw": "^2.3.4",
