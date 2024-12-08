@@ -29,7 +29,15 @@ export default async function ReservationCardList() {
 
   if (!result.data?.length) {
     return (
-      <p className="text-center">등록된 예약 정보가 없습니다.</p>
+      <div className="text-center">
+        <p className="mb-2">등록된 예약 정보가 없습니다.</p>
+        <Link
+          href="/reservation"
+          className="inline-block border bg-blue-500 text-white border-blue-600 rounded px-3 py-0.5"
+        >
+          예약하기
+        </Link>
+      </div>
     );
   }
 

@@ -8,6 +8,7 @@ import { updateReservationContent } from '@/actions/reservation/update';
 type EditableContentProps = {
   id: string;
   content: string;
+  readonly?: boolean;
 };
 
 export default function EditableContent(props: EditableContentProps) {
@@ -34,7 +35,7 @@ export default function EditableContent(props: EditableContentProps) {
     <div className="mb-6">
       <h1 className="text-xl font-bold">
         <span>예약 내용</span>
-        {!isEdit && <FontAwesomeIcon
+        {!isEdit && !props.readonly && <FontAwesomeIcon
           icon={faPen}
           className="text-sm ml-2 cursor-pointer"
           onClick={() => setEdit(true)}

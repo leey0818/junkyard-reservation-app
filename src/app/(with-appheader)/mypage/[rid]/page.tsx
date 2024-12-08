@@ -36,6 +36,7 @@ export default async function Page(props: { params: Params }) {
     )
   }
 
+  const isStatusPending = result.data.status === 'PENDING';
   return (
     <>
       <AppHeader>{result.data.car.licensePlate}</AppHeader>
@@ -66,14 +67,18 @@ export default async function Page(props: { params: Params }) {
           </div>
         </div>
 
-        <EditableContent id={params.rid} content={result.data.contents} />
+        <EditableContent
+          id={params.rid}
+          content={result.data.contents}
+          readonly={!isStatusPending}
+        />
 
         <div>
           <h1 className="text-xl font-bold">견적 정보</h1>
           <p className="mb-6">아직 등록된 견적이 없습니다.</p>
         </div>
 
-        {result.data.status === 'PENDING' && <div className="text-sm text-center">
+        {isStatusPending && <div className="text-sm text-center">
           <CancelButton id={result.data.reservationId} />
         </div>}
       </div>

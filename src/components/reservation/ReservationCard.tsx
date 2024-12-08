@@ -19,7 +19,7 @@ export default function ReservationCard({ data }: ReservationCardProps) {
         <p className="text-sm font-semibold mt-2">예약자</p>
         <p>{data.clientName} / {toPhoneNoFormat(data.phoneNo ?? '')}</p>
         <p className="text-sm font-semibold mt-2">예약내용</p>
-        <p>{data.contents}</p>
+        <p className="whitespace-nowrap overflow-hidden text-ellipsis">{data.contents}</p>
         <p className="text-sm font-semibold mt-2">견적 정보</p>
         <ul>
           {data.estimate?.length > 0
